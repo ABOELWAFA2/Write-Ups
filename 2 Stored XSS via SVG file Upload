@@ -1,0 +1,39 @@
+Hello guys, hope you all are doing well, This is my first writeup on medium.
+
+I’m Ahmed Kamal a Security Researcher and bug bounty hunter from Egypt, 
+In this Writeup I’ll tell you about my latest findings on VDP which was Stored Xss, 
+but Due to the company’s policy I can’t reveal the name of the program lets say target.com.
+
+The target was Education platform which has many functionalities but here I’ll talk about profile image uplaod in profile setting page.
+I started to upload jpg, png, jpeg all was normal, but when i tried to upload svg file i was surprised that it was accepted which is not common.
+
+Before we go to exploitation let’s give a brief explaination about SVG,
+Scalable Vector Graphics (SVG) is a web-friendly vector file format.The SVG file format is a popular tool for displaying two-dimensional graphics, 
+charts, and illustrations on websites.
+
+I had Read some exploitation technique to this scenario on hacktricks,
+
+https://book.hacktricks.xyz/pentesting-web/file-upload
+
+one of them was stored XSS, then I made a file with .svg extension with the following payload:
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg">
+  <polygon id="triangle" points="0,0 0,50 50,0" fill="#009900" stroke="#004400"/>
+  <script type="text/javascript">
+    alert("XSS by Ahmed Kamal");
+  </script>
+</svg>
+
+After uploading the file in the profile photo section, I opened the image in new tab and BOOM!!! that alert box.
+
+After that i tried the same Scenario on another subdomain of the target and i was SHOCKED!!! i found the same vulnerability.
+That’s all have a nice day.
+
+Feel free to connect with me
+Twitter-https://twitter.com/AhmedKa01184061
+
+Facebook-https://www.facebook.com/abo.elwafa.5817
+
+Ahmed Kamal AbuElwafa
