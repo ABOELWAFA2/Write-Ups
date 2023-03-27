@@ -1,0 +1,40 @@
+Hello guys, hope you all are doing well, This is my second writeup on medium, I’m Ahmed Kamal a Security Researcher and bug bounty hunter from Egypt.
+In this writeup, I am going to talk about a Reflected XSS Vulnerability on a VDP on my lovely platform bugcrowd , But Due to the company’s policy I can’t reveal the name of the target let’s say example.com
+I am sharing with you my first Reflected XSS finding, which I’ve found 1 month ago, which unfortunately got duplicated but no problem I’ll share the steps of the finding.
+Below are the tools that I use in testing xss but in this bug, i didn’t use all of them because the Rxss was in the search box on the home page so didn’t need to collect parameters for the domain.
+
+Tools:
+Paramspider:- https://github.com/devanshbatham/ParamSpider
+Gxss:- https://github.com/KathanP19/Gxss
+kxss:- https://github.com/Emoe/kxss
+xsstrike:- https://github.com/s0md3v/XSStrike
+
+First, i entered a random string on the search box to see what’ll happen
+https://subdomain.example.com/search?q=test
+then I saw that the word was reflected on the page
+
+you can automate this step using Gxss “which checks a bunch of URLs that contain reflecting params” with the command below :
+echo “https://subdomain.example.com/search?q=test" | Gxss
+which indicated that the value of the q parameter gets reflected in the page.
+
+let’s move to the next step where we want to know the appropriate payload for exploitation
+this step contains two processes, first, find the unfiltered parameter then find the perfect payload for that
+usually, i automate this whole process using kxss and XSStrike as shown below:-
+echo “https://www.kayenta.bie.edu/sys/search?q=test" | kxss
+the result was something like this:-
+URL: https://www.kayenta.bie.edu/sys/search?q=test Param: q Unfiltered: [ ' < > $ | ` : ; ]
+
+then moved to xsstrike with the command below:
+python3 xsstrike.py -d https://www.kayenta.bie.edu/sys/search?q=test
+well, it's completed and the final payload looked like this:
+https://www.kayenta.bie.edu/sys/search?q=%3Chtml%0aonmouseOver%0a=%0a(prompt)``//
+
+when i tested it in the browser it worked successfully and prompt box arised, then i reported it and got duplicated…
+
+Feel free to connect with me on:
+
+Twitter:-https://twitter.com/AhmedKa01184061
+
+Facebook:-https://www.facebook.com/abo.elwafa.5817
+
+Ahmed Kamal AbuElwafa
